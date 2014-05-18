@@ -24,6 +24,14 @@ Then from a REPL:
 ```
 
 
+## TODO
++ parse for SiteMapIndex elements
++ respect and follow SiteMapIndex elements - need to provide a fetch function to do this
++ lastmod
++ changefreq
++ priority
+
+
 
 ## License
 
