@@ -52,7 +52,7 @@
   => nil)
 
 
-(fact "Supports loc"
+(fact "Supports loc tag"
   (:loc (first (find-urls two-urls-xml)))
   => "http://bar.com"
 
