@@ -29,7 +29,7 @@
               uri (first (:content (first loc-child)))
               last-mod (first (:content (first last-mod-child)))
               change-freq (first (:content (first change-freq-child)))
-              priority (first (:content (first priority-child)))
+              priority (to-number (first (:content (first priority-child))))
               url {:loc uri :last-modified last-mod :change-freq change-freq :priority priority}]
           (recur (zip/next loc) (cons url found)))
         (recur (zip/next loc) found)))))

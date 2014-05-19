@@ -46,10 +46,18 @@
 
 (fact "Supports priority"
   (:priority (first (find-urls two-urls-xml)))
-  => "0.7"
+  => 0.7)
 
+
+(fact "If priority is not supplied, it defaults to 0.5"
   (:priority (second (find-urls two-urls-xml)))
-  => nil)
+  => 0.5)
+
+
+(fact "If priority is supplied, but is not a decimal number between 0.0 and 1.0, it defaults to 0.5"
+  (:priority (first (find-urls "<urlset><url><loc>http://foo.com</loc><priority>x</priority></url></urlset>")))
+  => 0.5)
+
 
 
 (fact "Supports loc tag"

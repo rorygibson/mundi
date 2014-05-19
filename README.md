@@ -37,7 +37,6 @@ Then from a REPL:
 + parse for SiteMapIndex elements
 + respect and follow SiteMapIndex elements - need to provide a fetch function to do this
 + parse lastmod into some kind of non-string time structure (joda?)
-+ convert priority into a number between 0.0 and 1.0, and default to 0.5 if it doesn't parse
 + validate changefreq against always | hourly | daily | weekly | monthly | yearly | never - and default to always if it doesn't validate
 
 ## License

@@ -20,3 +20,11 @@
   "Given a string, return an InputStream on the content"
   [^String st]
   (ByteArrayInputStream. (.getBytes st "UTF-8")))
+
+
+(defn to-number
+  "Convert a string representing a number between 0.1 and 1.0, to a number"
+  [s]
+  (if (and s (re-find #"^\d+\.\d+$" s))
+    (read-string s)
+    0.5))
