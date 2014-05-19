@@ -50,3 +50,12 @@
 
   (:priority (second (find-urls two-urls-xml)))
   => nil)
+
+
+(fact "Supports loc"
+  (:loc (first (find-urls two-urls-xml)))
+  => "http://bar.com"
+
+  (:loc (second (find-urls two-urls-xml)))
+  => "http://foo.com")
+
