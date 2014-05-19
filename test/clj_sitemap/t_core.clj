@@ -3,9 +3,19 @@
   (:require [clj-sitemap.core :refer :all]))
 
 
-(def two-urls-xml "<urlset><url><loc>http://foo.com</loc></url><url><loc>http://bar.com</loc></url></urlset>")
+(def two-urls-xml
+  "<urlset>
+     <url>
+       <loc>http://foo.com</loc>
+       <lastmodified>2014-01-02</lastmodified>
+     </url>
 
+     <url>
+       <loc>http://bar.com</loc>
+     </url>
+  </urlset>")
 
+ 
 (fact "Finds the (single) location in a very simple sitemap with one location"
   (first (find-locs "<urlset><url><loc>http://foo.com</loc></url></urlset>"))
   => "http://foo.com")
@@ -16,9 +26,10 @@
   => 2)
 
 
-(fact "Finds all the URLs in a sitemap"
-  (find-urls two-urls-xml)
-  => [{:loc "http://foo.com"} {:loc "http://bar.com"}])
+(fact "URL elements contain lastmodified data where available"
+  (:last-modified (first (find-urls two-urls-xml)))
+  => nil
 
-
+  (:last-modified (second (find-urls two-urls-xml)))
+  => "2014-01-02")
 
