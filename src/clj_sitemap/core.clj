@@ -27,9 +27,20 @@
           (recur (zip/next loc) found))))))
 
 
+(defn find-urls
+  "Find all the URLs in the sitemap, return a seq of {:loc \"http://...\" } elements"
+  [^String xml]
+  (let [t (parse xml)
+        z (zip/xml-zip t)
+        the-ns (find-nodes-in-tree-zipper z "url")]
+    (map
+     (fn [u] { :loc (first (:content u))})
+     the-ns)))
+
+
 (defn find-locs
-  "Find all the LOC nodes in the sitemap XML."
-  [xml]
+  "Find all the LOC nodes in the sitemap XML. Return a seq of URIs as strings"
+  [^String xml]
   (let [t (parse xml)
         z (zip/xml-zip t)]
     (find-nodes-in-tree-zipper z "loc")))
