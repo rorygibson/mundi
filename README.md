@@ -2,6 +2,8 @@
 
 A Clojure library for reading and interpreting [http://www.sitemaps.org](sitemaps).
 
+Provides a minimal skin over the semantics of the sitemaps spec; effectively just gathers the data and gives you back nice, Clojure-ish maps and lists.
+
 
 ## Usage
 
