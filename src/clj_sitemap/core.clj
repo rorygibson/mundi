@@ -24,10 +24,13 @@
               loc-child (filter #(= (:tag %) :loc) children)
               last-mod-child (filter #(= (:tag %) :lastmodified) children)
               change-freq-child (filter #(= (:tag %) :changefreq) children)
+              priority-child (filter #(= (:tag %) :priority) children)
+              
               uri (first (:content (first loc-child)))
               last-mod (first (:content (first last-mod-child)))
               change-freq (first (:content (first change-freq-child)))
-              url {:loc uri :last-modified last-mod :change-freq change-freq}]
+              priority (first (:content (first priority-child)))
+              url {:loc uri :last-modified last-mod :change-freq change-freq :priority priority}]
           (recur (zip/next loc) (cons url found)))
         (recur (zip/next loc) found)))))
 

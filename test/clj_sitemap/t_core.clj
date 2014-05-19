@@ -13,6 +13,7 @@
      <url>
        <loc>http://bar.com</loc>
        <changefreq>monthly</changefreq>
+       <priority>0.7</priority>
      </url>
   </urlset>")
 
@@ -27,7 +28,7 @@
   => 2)
 
 
-(fact "URL elements contain lastmodified data where available"
+(fact "Supports lastmodified"
   (:last-modified (first (find-urls two-urls-xml)))
   => nil
 
@@ -35,9 +36,17 @@
   => "2014-01-02")
 
 
-(fact "URL elements contain changefreq data where available"
+(fact "Supports changefreq"
   (:change-freq (first (find-urls two-urls-xml)))
   => "monthly"
 
   (:change-freq (second (find-urls two-urls-xml)))
+  => nil)
+
+
+(fact "Supports priority"
+  (:priority (first (find-urls two-urls-xml)))
+  => "0.7"
+
+  (:priority (second (find-urls two-urls-xml)))
   => nil)
