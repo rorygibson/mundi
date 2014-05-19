@@ -18,8 +18,8 @@ Then from a REPL:
 (require [clj-http.client :as client])
 (require [clj-sitemap.core :as sm]
 
-(def beeb (clj-sitemap/load-map (:body (client/get "http://www.bbc.co.uk/sport/sitemap.xml"))))
-(count (urls-in beeb))
+(def beeb (:body (client/get "http://www.bbc.co.uk/sport/sitemap.xml")))
+(count (sm/find-urls beeb))
 => 493
 ```
 
