@@ -23,9 +23,11 @@
         (let [children (zip/children loc)
               loc-child (filter #(= (:tag %) :loc) children)
               last-mod-child (filter #(= (:tag %) :lastmodified) children)
+              change-freq-child (filter #(= (:tag %) :changefreq) children)
               uri (first (:content (first loc-child)))
-              last-mod (first (get (first last-mod-child) :content))
-              url {:loc uri :last-modified last-mod}]
+              last-mod (first (:content (first last-mod-child)))
+              change-freq (first (:content (first change-freq-child)))
+              url {:loc uri :last-modified last-mod :change-freq change-freq}]
           (recur (zip/next loc) (cons url found)))
         (recur (zip/next loc) found)))))
 

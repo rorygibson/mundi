@@ -12,6 +12,7 @@
 
      <url>
        <loc>http://bar.com</loc>
+       <changefreq>monthly</changefreq>
      </url>
   </urlset>")
 
@@ -33,3 +34,10 @@
   (:last-modified (second (find-urls two-urls-xml)))
   => "2014-01-02")
 
+
+(fact "URL elements contain changefreq data where available"
+  (:change-freq (first (find-urls two-urls-xml)))
+  => "monthly"
+
+  (:change-freq (second (find-urls two-urls-xml)))
+  => nil)
