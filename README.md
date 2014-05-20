@@ -1,6 +1,6 @@
 # Mundi
 
-![Mappa Mundi](http://en.wikipedia.org/wiki/File:Hereford_Mappa_Mundi_1300.jpg)
+![Mappa Mundi](/doc/212px-Hereford_Mappa_Mundi_1300.jpg)
 
 A Clojure library for reading and interpreting [http://www.sitemaps.org](sitemaps).
 
