@@ -1,8 +1,10 @@
-# clj-sitemap
+# Mundi
+
+![Mappa Mundi](http://en.wikipedia.org/wiki/File:Hereford_Mappa_Mundi_1300.jpg)
 
 A Clojure library for reading and interpreting [http://www.sitemaps.org](sitemaps).
 
-Provides a minimal skin over the semantics of the sitemaps spec; effectively just gathers the data and gives you back nice, Clojure-ish maps and lists.
+Provides a minimal skin over the semantics of the sitemaps spec; aims to just gather the data and give you back nice, Clojure-ish maps and lists.
 
 
 ## Usage
@@ -10,7 +12,7 @@ Provides a minimal skin over the semantics of the sitemaps spec; effectively jus
 Include it in your project.clj (you'll probably also want something like clj-http to actually retrieve the files from the remote server)
 
 ```clojure
-[clj-sitemap "0.1.0-SNAPSHOT"]
+[mundi "0.1.0-SNAPSHOT"]
 [clj-http "0.9.1"]
 ```
 
@@ -18,7 +20,7 @@ Then from a REPL:
 
 ```clojure
 user=> (require [clj-http.client :as client])
-user=> (require [clj-sitemap.core :as sm]
+user=> (require [mundi.core :as sm]
 
 user=> (def beeb-data (:body (client/get "http://www.bbc.co.uk/sport/sitemap.xml")))
 

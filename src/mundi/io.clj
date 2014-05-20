@@ -1,4 +1,4 @@
-(ns clj-sitemap.io
+(ns mundi.io
   (:import [java.io InputStream StringWriter ByteArrayInputStream]))
 
 

@@ -1,7 +1,7 @@
-(ns clj-sitemap.core
+(ns mundi.core
   (:require [clojure.xml]
             [clojure.zip :as zip]
-            [clj-sitemap.io :refer :all]))
+            [mundi.io :refer :all]))
 
 (defn- parse
   "Parse XML provided as a string"

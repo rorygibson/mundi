@@ -1,7 +1,7 @@
-(ns clj-sitemap.t-core
+(ns mundi.t-core
   (:use [midje.sweet])
-  (:require [clj-sitemap.core :refer :all]
-            [clj-sitemap.io :refer [todays-date]]))
+  (:require [mundi.core :refer :all]
+            [mundi.io :refer [todays-date]]))
 
 
 (def jan-2nd-2014-date (java.util.Date. 114 0 02))
