@@ -17,18 +17,18 @@ Include it in your project.clj (you'll probably also want something like clj-htt
 Then from a REPL:
 
 ```clojure
-(require [clj-http.client :as client])
-(require [clj-sitemap.core :as sm]
+user=> (require [clj-http.client :as client])
+user=> (require [clj-sitemap.core :as sm]
 
-(def beeb-data (:body (client/get "http://www.bbc.co.uk/sport/sitemap.xml")))
+user=> (def beeb-data (:body (client/get "http://www.bbc.co.uk/sport/sitemap.xml")))
 
-(def beeb-urls (sm/find-urls beeb-data))
+user=> (def beeb-urls (sm/find-urls beeb-data))
 
-(count beeb-urls)
-=> 493
+user=> (count beeb-urls)
+493
 
-(first beeb-urls)
-=> {:loc "http://www.bbc.co.uk..." :change-freq "monthly" :priority 0.5 :last-modified "2014-01-29"}
+user=> (first beeb-urls)
+{:loc "http://www.bbc.co.uk..." :change-freq "monthly" :priority 0.5 :last-modified #inst "2014-05-20T00:00:00.000+01:00"}
 
 ```
 
@@ -36,7 +36,6 @@ Then from a REPL:
 ## TODO
 + parse for SiteMapIndex elements
 + respect and follow SiteMapIndex elements - need to provide a fetch function to do this
-+ parse lastmod into some kind of non-string time structure (joda?)
 + validate changefreq against always | hourly | daily | weekly | monthly | yearly | never - and default to always if it doesn't validate
 
 ## License

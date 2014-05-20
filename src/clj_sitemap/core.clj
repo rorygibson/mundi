@@ -27,7 +27,7 @@
               priority-child (filter #(= (:tag %) :priority) children)
               
               uri (first (:content (first loc-child)))
-              last-mod (first (:content (first last-mod-child)))
+              last-mod (to-inst (first (:content (first last-mod-child))))
               change-freq (first (:content (first change-freq-child)))
               priority (to-number (first (:content (first priority-child))))
               url {:loc uri :last-modified last-mod :change-freq change-freq :priority priority}]
