@@ -11,7 +11,7 @@
   "<urlset>
      <url>
        <loc>http://foo.com</loc>
-       <lastmodified>2014-01-02</lastmodified>
+       <lastmod>2014-01-02</lastmod>
      </url>
 
      <url>
@@ -40,18 +40,18 @@
   => "http://foo.com")
 
 
-(fact "Supports lastmodified"
+(fact "Supports lastmod"
   (:last-modified (second (find-urls two-urls-xml)))
   => jan-2nd-2014-date)
 
 
-(fact "If lastmodified is not supplied, it defaults to today"
+(fact "If lastmod is not supplied, it defaults to today"
   (:last-modified (first (find-urls two-urls-xml)))
   => (todays-date))
 
 
 (fact "If lastmodified is supplied as an incorrect value, it defaults to today"
-  (:last-modified (first (find-urls "<urlset><url><loc>http://x.com</loc><lastmodified>UH-OH</lastmodified></url></urlset>")))
+  (:last-modified (first (find-urls "<urlset><url><loc>http://x.com</loc><lastmod>UH-OH</lastmod></url></urlset>")))
   => (todays-date))
 
 
@@ -96,4 +96,34 @@
   => 0.5)
 
 
+(def site-map-index
+"<sitemapindex>
+   <sitemap>
+      <loc>http://www.example.com/sitemap1.xml</loc>
+      <lastmod>2014-01-02</lastmod>
+   </sitemap>
+   <sitemap>
+      <loc>http://www.example.com/sitemap2.xml</loc>
+   </sitemap>
+</sitemapindex>")
 
+
+(fact "can find SiteMapIndex elements"
+  (find-sitemaps site-map-index)
+  => [
+      {:loc "http://www.example.com/sitemap2.xml" :last-modified (todays-date)}
+      {:loc "http://www.example.com/sitemap1.xml" :last-modified jan-2nd-2014-date}])
+
+
+(fact "sitemap? can tell if some XML represents a sitemap"
+  (sitemap? "<urlset><url><loc>http://foo.com</loc></url></urlset>") => truthy  
+  (sitemap? "<sitemapindex><sitemap><loc>http://foo.com</loc></sitemap></sitemapindex>") => falsey)
+
+
+(fact "sitemap-index? can tell if some XML represents a sitemapindex"
+  (sitemap-index? "<urlset><url><loc>http://foo.com</loc></url></urlset>") => falsey
+  (sitemap-index? "<sitemapindex><sitemap><loc>http://foo.com</loc></sitemap></sitemapindex>") => truthy)
+
+
+; TODO
+(fact "if supplied with a sitemapindex and a fetcher function, recursively obtains the URLs withing all the referenced SiteMaps")

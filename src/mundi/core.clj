@@ -38,7 +38,7 @@
   (filter #(= (:tag %) tag-name) els))
 
 
-(defn- find-nodes-in-tree-zipper
+(defn- find-urls-in-tree-zipper
   "Find all the URL nodes in a tree of XML, and return maps containing their child URIs (loc tag content), last-modified date, changefreq, priority"
   [loc]
   (loop [loc loc
@@ -51,7 +51,7 @@
         (let [children (zip/children loc)              
               
               uri (content (filter-for :loc children))
-              last-mod (to-inst (content (filter-for :lastmodified children)))
+              last-mod (to-inst (content (filter-for :lastmod children)))
               change-freq (to-changefreq (content (filter-for :changefreq children)))
               priority (to-number (content (filter-for :priority children)))
               
@@ -60,12 +60,22 @@
         (recur (zip/next loc) found)))))
 
 
-(defn find-urls
-  "Find all the URLs in the sitemap, return a seq of {:loc \"http://...\" :last-modified <datestr> elements"
-  [^String xml]
-  (let [t (parse xml)
-        z (zip/xml-zip t)]
-    (find-nodes-in-tree-zipper z)))
+(defn- find-sitemaps-in-tree-zipper
+  "Find all the SiteMap nodes in a tree of XML, and return maps containing their child URIs (loc tag content) & last-modified date"
+  [loc]
+  (loop [loc loc
+         found '()]
+    
+    (if (zip/end? loc)
+      found
+
+      (if (= :sitemap (:tag (zip/node loc)))
+        (let [children (zip/children loc)           
+              uri (content (filter-for :loc children))
+              last-mod (to-inst (content (filter-for :lastmod children)))              
+              smi {:loc uri :last-modified last-mod}]
+          (recur (zip/next loc) (cons smi found)))
+        (recur (zip/next loc) found)))))
 
 
 (defn find-locs
@@ -73,3 +83,42 @@
   [^String xml]
   (let [urls (find-urls xml)]
     (map :loc urls)))
+
+
+(defn find-sitemaps
+  "Find all the SiteMaps in a SiteMapIndex, return a seq of {:loc \"http://...\" :last-modified <date>} elements"
+  [^String xml]
+  (let [t (parse xml)
+        z (zip/xml-zip t)]
+    (find-sitemaps-in-tree-zipper z)))
+
+
+(defn sitemap?
+  "Returns true if the root element of the XML is a <urlset>"
+  [xml]
+  (let [t (parse xml)
+        z (zip/xml-zip t)]
+    (= :urlset (:tag (zip/node z)))))
+
+
+(defn sitemap-index?
+  "Returns true if the root element of the XML is a <sitemapindex>"
+  [xml]
+  (let [t (parse xml)
+        z (zip/xml-zip t)]
+    (= :sitemapindex (:tag (zip/node z)))))
+
+
+
+(defn find-urls
+  "Find all the URLs in the sitemap, return a seq of {:loc \"http://...\" :last-modified <date> elements.
+
+   If supplied with a fetch-fn of one argument, passes SiteMap URLs of any SiteMapIndexes encountered,
+   and recursively analyses the data returned by the fetch-fn as if it were sitemap data. "
+  ([^String xml]
+     (let [t (parse xml)
+           z (zip/xml-zip t)]
+       (find-urls-in-tree-zipper z)))
+  
+  ([^String xml fetch-fn]
+     ))
