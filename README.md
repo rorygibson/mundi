@@ -28,15 +28,18 @@ user=> (count beeb-urls)
 493
 
 user=> (first beeb-urls)
-{:loc "http://www.bbc.co.uk..." :change-freq "monthly" :priority 0.5 :last-modified #inst "2014-05-20T00:00:00.000+01:00"}
+{:loc "http://www.bbc.co.uk..." :change-freq :monthly :priority 0.5 :last-modified #inst "2014-05-20T00:00:00.000+01:00"}
 
 ```
 
+## Features
++ Loads sitemap content from a string (requires the user to fetch the data from the source and convert to string - see examples for how to use e.g. clj-http)
++ Returns standard Clojure structures (maps, lists, keywords, date instants)
++ Provides sensible defaults for missing or invalid values in the sitemap data
+
 
 ## TODO
-+ parse for SiteMapIndex elements
 + respect and follow SiteMapIndex elements - need to provide a fetch function to do this
-+ validate changefreq against always | hourly | daily | weekly | monthly | yearly | never - and default to always if it doesn't validate
 
 ## License
 

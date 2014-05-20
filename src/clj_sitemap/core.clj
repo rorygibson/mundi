@@ -1,17 +1,45 @@
 (ns clj-sitemap.core
   (:require [clojure.xml]
             [clojure.zip :as zip]
-            [clj-sitemap.io :refer :all]
-            [clj-sitemap.io :refer [stream-from]]))
+            [clj-sitemap.io :refer :all]))
 
-(defn parse
+(defn- parse
   "Parse XML provided as a string"
   [xml]
   (clojure.xml/parse (stream-from xml)))
 
 
-(defn find-nodes-in-tree-zipper
-  "Find all the URL nodes in a tree of XML, and return maps containing their child URIs (loc tag content), last-modified date etc."
+(defn- to-changefreq
+  "Given a string representing a changefreq, convert it into a keyword representing a valid changefreq value; default to :always if the string did not represent a valid changefreq value."
+  [^String s]
+  (let [v (if s (keyword (.toLowerCase s)) :INVALID)]
+    (if (some #{v} #{:always :hourly :daily :weekly :monthly :yearly :never})
+      v
+      :always)))
+
+
+(defn to-number
+  "Convert a string representing a number between 0.1 and 1.0, to a number"
+  [s]
+  (if (and s (re-find #"^\d+\.\d+$" s))
+    (read-string s)
+    0.5))
+
+
+(defn- content
+  "Unwrap the content structure of the XML nodes"
+  [n]
+  (first (:content (first n))))
+
+
+(defn- filter-for
+  "Filter for an XML node with a given tag name"
+  [tag-name els]
+  (filter #(= (:tag %) tag-name) els))
+
+
+(defn- find-nodes-in-tree-zipper
+  "Find all the URL nodes in a tree of XML, and return maps containing their child URIs (loc tag content), last-modified date, changefreq, priority"
   [loc]
   (loop [loc loc
          found '()]
@@ -20,16 +48,13 @@
       found
 
       (if (= :url (:tag (zip/node loc)))
-        (let [children (zip/children loc)
-              loc-child (filter #(= (:tag %) :loc) children)
-              last-mod-child (filter #(= (:tag %) :lastmodified) children)
-              change-freq-child (filter #(= (:tag %) :changefreq) children)
-              priority-child (filter #(= (:tag %) :priority) children)
+        (let [children (zip/children loc)              
               
-              uri (first (:content (first loc-child)))
-              last-mod (to-inst (first (:content (first last-mod-child))))
-              change-freq (first (:content (first change-freq-child)))
-              priority (to-number (first (:content (first priority-child))))
+              uri (content (filter-for :loc children))
+              last-mod (to-inst (content (filter-for :lastmodified children)))
+              change-freq (to-changefreq (content (filter-for :changefreq children)))
+              priority (to-number (content (filter-for :priority children)))
+              
               url {:loc uri :last-modified last-mod :change-freq change-freq :priority priority}]
           (recur (zip/next loc) (cons url found)))
         (recur (zip/next loc) found)))))

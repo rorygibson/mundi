@@ -21,7 +21,7 @@
      </url>
   </urlset>")
 
- 
+
 (fact "Finds the (single) location in a very simple sitemap with one location"
   (first (find-locs "<urlset><url><loc>http://foo.com</loc></url></urlset>"))
   => "http://foo.com")
@@ -57,10 +57,28 @@
 
 (fact "Supports changefreq"
   (:change-freq (first (find-urls two-urls-xml)))
-  => "monthly"
+  => :monthly)
 
+
+(fact "If the changefreq is missing, default to :always"
   (:change-freq (second (find-urls two-urls-xml)))
-  => nil)
+  => :always)
+
+
+(fact "The changefreq will always be lowercased"
+  (:change-freq (first (find-urls "<urlset><url><loc>http://</loc><changefreq>MONTHLY</changefreq></url></urlset>")))
+  => :monthly)
+
+
+(fact "The changefreq is validated against  always | hourly | daily | weekly | monthly | yearly | never - and returns :always if invalid"
+  (:change-freq (first (find-urls "<urlset><url><loc>http://</loc><changefreq>always</changefreq></url></urlset>"))) => :always
+  (:change-freq (first (find-urls "<urlset><url><loc>http://</loc><changefreq>hourly</changefreq></url></urlset>"))) => :hourly
+  (:change-freq (first (find-urls "<urlset><url><loc>http://</loc><changefreq>daily</changefreq></url></urlset>"))) => :daily
+  (:change-freq (first (find-urls "<urlset><url><loc>http://</loc><changefreq>weekly</changefreq></url></urlset>"))) => :weekly
+  (:change-freq (first (find-urls "<urlset><url><loc>http://</loc><changefreq>monthly</changefreq></url></urlset>"))) => :monthly
+  (:change-freq (first (find-urls "<urlset><url><loc>http://</loc><changefreq>yearly</changefreq></url></urlset>"))) => :yearly
+  (:change-freq (first (find-urls "<urlset><url><loc>http://</loc><changefreq>never</changefreq></url></urlset>"))) => :never
+    (:change-freq (first (find-urls "<urlset><url><loc>http://</loc><changefreq>INVALID</changefreq></url></urlset>"))) => :always)
 
 
 (fact "Supports priority"
