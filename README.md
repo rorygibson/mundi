@@ -41,9 +41,7 @@ user=> (first beeb-urls)
 
 
 ## TODO
-+ support gzipped sitemaps and sitemap indexes
 + Tests for last-modified values with time portion
-+ respect and follow SiteMapIndex elements - need to provide a fetch function to do this
 
 ## License
 

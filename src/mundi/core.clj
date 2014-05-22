@@ -4,23 +4,6 @@
             [mundi.time :refer :all]))
 
 
-
-
-
-;; TODO ??
-;; Given XML
-;; If the XML is a sitemap-index
-;;   Extract all the sitemap-locs from the XML
-;;   For each sitemap-loc,
-;;     Fetch the XML from the loc
-;;     If the XML is a sitemap-index, recur
-;;     If the XML is a sitemap, extract all the URLs
-;; If the XML is a sitemap
-;;  Extract all the URLs
-
-
-
-
 (def change-freqs #{:always :hourly :daily :weekly :monthly :yearly :never})
 
 
