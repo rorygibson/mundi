@@ -1,5 +1,18 @@
 (ns mundi.io
+  (:require [clojure.xml])
   (:import [java.io InputStream StringWriter ByteArrayInputStream]))
+
+
+(defn filter-for-tag
+  "Filter for an XML node with a given tag name"
+  [tag-name els]
+  (filter #(= (:tag %) tag-name) els))
+
+
+(defn content
+  "Unwrap the content structure of the XML nodes"
+  [n]
+  (first (:content (first n))))
 
 
 (defn string-from
@@ -22,20 +35,24 @@
   (ByteArrayInputStream. (.getBytes st "UTF-8")))
 
 
-(defn todays-date
-  "Return a java.util.Date with the hours, minutes, secons and millis zeroed"
-  []
-  (doto (java.util.Calendar/getInstance)
-    (.set java.util.Calendar/HOUR 0)
-    (.set java.util.Calendar/MINUTE 0)
-    (.set java.util.Calendar/SECOND 0)
-    (.set java.util.Calendar/MILLISECOND 0)))
+(defn parse
+  "Parse XML provided as a string"
+  [xml]
+  (clojure.xml/parse (stream-from xml)))
 
 
-(defn to-inst
-  "Given a string representing a timestamp (in W3C datetime format, http://www.w3.org/TR/NOTE-datetime), return an instant"
-  [^String s]
-  (try
-    (clojure.instant/read-instant-date s)
-    (catch Exception e
-      (todays-date))))
+(defn to-number
+  "Convert a string representing a number between 0.1 and 1.0, to a number"
+  [s]
+  (if (and s (re-find #"^\d+\.\d+$" s))
+    (read-string s)
+    0.5))
+
+
+(defn to-validated-keyword
+  "Given a string value v, validate and convert it into one of a set of lowercased keywords ks. If validation fails, return the default."
+  [^String v ks default]
+    (let [v (if v (keyword (.toLowerCase v)) :INVALID)]
+      (if (some #{v} ks)
+        v
+        default)))

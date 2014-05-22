@@ -1,7 +1,9 @@
 (ns mundi.t-core
   (:use [midje.sweet])
-  (:require [mundi.core :refer :all]
-            [mundi.io :refer [todays-date]]))
+  (:require [clj-http.client :as client]
+            [mundi.core :refer :all]
+            [mundi.io :refer :all]
+            [mundi.time :refer :all]))
 
 
 (def jan-2nd-2014-date (java.util.Date. 114 0 02))
@@ -22,13 +24,13 @@
   </urlset>")
 
 
-(fact "Finds the (single) location in a very simple sitemap with one location"
-  (first (find-locs "<urlset><url><loc>http://foo.com</loc></url></urlset>"))
+(fact "Finds the (single) URL in a very simple sitemap with one location"
+  (:loc (first (find-urls "<urlset><url><loc>http://foo.com</loc></url></urlset>")))
   => "http://foo.com")
 
 
-(fact "Finds all the locations in a simple sitemap with two locations"
-  (count (find-locs two-urls-xml))
+(fact "Finds all the URLs in a simple sitemap with two locations"
+  (count (find-urls two-urls-xml))
   => 2)
 
 
@@ -124,6 +126,3 @@
   (sitemap-index? "<urlset><url><loc>http://foo.com</loc></url></urlset>") => falsey
   (sitemap-index? "<sitemapindex><sitemap><loc>http://foo.com</loc></sitemap></sitemapindex>") => truthy)
 
-
-; TODO
-(fact "if supplied with a sitemapindex and a fetcher function, recursively obtains the URLs withing all the referenced SiteMaps")
