@@ -13,17 +13,19 @@
 (defn sitemap?
   "Returns true if the root element of the XML is a <urlset>"
   [^String xml]
-  (let [t (parse xml)
-        z (zip/xml-zip t)]
-    (= :urlset (:tag (zip/node z)))))
+  (if xml
+    (let [t (parse xml)
+          z (zip/xml-zip t)]
+      (= :urlset (:tag (zip/node z))))))
 
 
 (defn sitemap-index?
   "Returns true if the root element of the XML is a <sitemapindex>"
   [^String xml]
-  (let [t (parse xml)
-        z (zip/xml-zip t)]
-    (= :sitemapindex (:tag (zip/node z)))))
+  (if xml
+    (let [t (parse xml)
+          z (zip/xml-zip t)]
+      (= :sitemapindex (:tag (zip/node z))))))
 
 
 (defn- find-urls-in-tree-zipper
